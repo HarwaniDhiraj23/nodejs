@@ -27,19 +27,19 @@ export const registerUser = async (req: Request) => {
         status: 0,
     });
 
-    await sendMail(
-        email,
-        'Your OTP Verification Code',
-        {
-            header: "Email Verification",
-            title: "We received a request to verify your email address. Please use the OTP below to complete your verification:",
-            name: name,
-            otp: otp,
-            expiresIn: 10,
-            timeUnit: 'minutes',
-            text: "This OTP will expire in"
-        }
-    );
+    // await sendMail(
+    //     email,
+    //     'Your OTP Verification Code',
+    //     {
+    //         header: "Email Verification",
+    //         title: "We received a request to verify your email address. Please use the OTP below to complete your verification:",
+    //         name: name,
+    //         otp: otp,
+    //         expiresIn: 10,
+    //         timeUnit: 'minutes',
+    //         text: "This OTP will expire in"
+    //     }
+    // );
     const plainUser = newUser.get({ plain: true })
 
     delete plainUser.password;
