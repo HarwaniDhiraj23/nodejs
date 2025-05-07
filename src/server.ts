@@ -6,13 +6,13 @@ import http from 'http';
 import https from 'https';
 
 
-const keyPath = path.resolve(__dirname, '../key.pem');
-const certPath = path.resolve(__dirname, '../cert.pem');
+// const keyPath = path.resolve(__dirname, '../key.pem');
+// const certPath = path.resolve(__dirname, '../cert.pem');
 
-const credentials = {
-    key: fs.readFileSync(keyPath, 'utf-8'),
-    cert: fs.readFileSync(certPath, 'utf-8'),
-};
+// const credentials = {
+//     key: fs.readFileSync(keyPath, 'utf-8'),
+//     cert: fs.readFileSync(certPath, 'utf-8'),
+// };
 
 //for normal server
 // app.listen(config.port, () => {
@@ -31,6 +31,6 @@ http.createServer(app).listen(config.port, () => {
 });
 
 // Start HTTPS Server
-https.createServer(credentials, app).listen(8080, () => {
-    console.log(`🔐 HTTPS server running on https://localhost:8080`);
-});
+// https.createServer(credentials, app).listen(8080, () => {
+//     console.log(`🔐 HTTPS server running on https://localhost:8080`);
+// });
