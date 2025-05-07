@@ -71,6 +71,6 @@
     "predeploy": "npm run migrate && npm run seed"
   },
   "engines": {
-    "node": "22.x"
+    "node": "21.x"
   }
 }
