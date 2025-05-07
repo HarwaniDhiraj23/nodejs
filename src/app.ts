@@ -77,7 +77,7 @@ hourlyJob()
 
 registerEmailListeners()
 
-const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// const swaggerDocument = yaml.load(path.join(__dirname, 'swagger.yaml'));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 export default app;
