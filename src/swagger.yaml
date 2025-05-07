@@ -1,0 +1,881 @@
+openapi: 3.0.3
+
+info:
+  title: ToDo Management API
+  description: |
+    A RESTful API for managing tasks in a ToDo application. 
+    It provides endpoints for creating, reading, updating, and deleting tasks, 
+    as well as managing task statuses
+  version: 1.0.0
+  contact:
+    name: Harwani Dhiraj
+    email: dhiraj.harwani@tatvasoft.com
+
+servers:
+
+  - url: http://localhost:3001
+    description: Local Development Server
+  - url: http://localhost:3002
+    description: Staging Server
+  - url: http://localhost:3000
+    description: Production Server
+  - url: https://localhost:8080
+    description: Secure Server
+
+tags:
+
+  - name: users
+    description: Operations related to users
+  - name: todo
+    description: Operations related to todo items
+  - name: file
+    description: Operations related to file upload
+  - name: 3rdParty
+    description: Operations related to 3rdParty
+
+paths:
+  /api/users/register:
+    post:
+      tags:
+        - users
+      summary: Register a new user
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterUserRequest"
+      responses:
+        "200":
+          description: Successful registration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RegisterUserSuccessResponse"
+        "400":
+          description: Validation errors (bad input)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+        "409":
+          description: Email already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EmailExistsErrorResponse"
+
+  /api/users/verifyOtp:
+    post:
+      tags:
+        - users
+      summary: Verify otp for a new user
+      operationId: verify otp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerifyUserRequest"
+      responses:
+        "200":
+          description: Successful verification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/VerifyUserSuccessResponse"
+        "400":
+          description: Validation errors (bad input)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ValidationErrorResponse"
+                  - $ref: "#/components/schemas/OtpInvalidErrorResponse"
+
+  /api/users/login:
+    post:
+      tags:
+        - users
+      summary: user login
+      operationId: user login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginUserRequest"
+      responses:
+        "200":
+          description: Successful verification
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LogInUserSuccessResponse"
+        "400":
+          description: Validation errors (bad input)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ValidationErrorResponse"
+                  - $ref: "#/components/schemas/OtpInvalidErrorResponse"
+        "401":
+          description: password incorrect
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordIncorrectErrorResponse"
+        "404":
+          description: email not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WrongEmailErrorResponse"
+
+  /api/todos/getTodos:
+    get:
+      tags:
+        - todo
+      summary: Get all todos
+      operationId: getTodos
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: List of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TodoResponse"
+        "401":
+          description: Unauthorized - No token provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+
+  /api/todos/addTodos:
+    post:
+      tags:
+        - todo
+      summary: Insert New Todo
+      operationId: Insert new todo
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTodoRequest"
+      responses:
+        "200":
+          description: List of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CreateTodoSuccessRequest"
+        "400":
+          description: Validation errors (bad input)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+
+  /api/todos/editTodo/{id}:
+    put:
+      tags:
+        - todo
+      summary: Edit an existing Todo
+      operationId: editTodo
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the todo to edit
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTodoRequest"
+      responses:
+        "200":
+          description: List of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CreateTodoSuccessRequest"
+        "400":
+          description: Validation errors (bad input)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+
+  /api/todos/completedTodo/{id}:
+    patch:
+      tags:
+        - todo
+      summary: Mark as completed to existing todo 
+      operationId: markCompleted
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the todo to edit
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CreateTodoSuccessRequest"
+        "400":
+          description: Validation errors (bad input)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationErrorResponse"
+
+  /api/todos/deleteTodo/{id}:
+    delete:
+      tags:
+        - todo
+      summary: Delete existing todo 
+      operationId: deleteTodo
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the todo to edit
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of todos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/DeleteTodoSuccessRequest"
+        "400":
+          description: Validation errors (bad input)
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/ValidationErrorResponse"
+                  - $ref: "#/components/schemas/OtpInvalidErrorResponse"
+
+  /api/files/upload:
+    post:
+      tags:
+        - file
+      summary: Upload a file
+      operationId: uploadFile
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "200":
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadFileSuccessResponse"
+        "400":
+          description: File upload failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadFileErrorResponse"
+
+  /api/3rdParty/getWeather:
+    get:
+      tags:
+        - 3rdParty
+      summary: Get Weather
+      operationId: getWeather
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WeatherRequest"
+      responses:
+        "200":
+          description: weather
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WeatherResponse"
+        "401":
+          description: Unauthorized - No token provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+
+  /api/3rdParty/getNews:
+    get:
+      tags:
+        - 3rdParty
+      summary: Get News
+      operationId: getNews
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: weather
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NewsResponse"
+        "401":
+          description: Unauthorized - No token provided
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnauthorizedResponse"
+components:
+  
+  securitySchemes:
+
+    bearerAuth:   
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
+  schemas:
+
+    RegisterUserRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          example: dhiraj
+        email:
+          type: string
+          format: email
+          example: deep@gmail.com
+        password:
+          type: string
+          format: password
+          example: Dhiraj@123
+      required:
+        - name
+        - email
+        - password
+
+    VerifyUserRequest:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 12
+        otp:
+          type: number
+          example: 1234
+      required:
+        - id
+        - otp
+
+    LoginUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          example: dhiraj@gmail.com
+        password:
+          type: string
+          format: password
+          example: Dhiraj@123
+      required:
+        - email
+        - password
+
+    RegisterUserSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Successful.
+        data:
+          type: object
+          properties:
+            createdAt:
+              type: string
+              format: date-time
+              example: 2025-04-28T09:14:26.970Z
+            updatedAt:
+              type: string
+              format: date-time
+              example: 2025-04-28T09:14:26.971Z
+            id:
+              type: integer
+              example: 26
+            name:
+              type: string
+              example: dhiraj
+            email:
+              type: string
+              example: deep@gmail.com
+            status:
+              type: integer
+              example: 0
+        meta:
+          type: object
+          nullable: true
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Validation failed
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              message:
+                type: string
+                example: name length must be at least 3 characters long
+              path:
+                type: string
+                example: name
+        data:
+          type: object
+          nullable: true
+
+    EmailExistsErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Email already exists
+        errorCode:
+          type: string
+          example: EMAIL_ALREADY_EXISTS
+        data:
+          type: object
+          nullable: true
+
+    VerifyUserSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: User verified please login.
+        data:
+          type: boolean
+          example: true
+        meta:
+          type: null
+          nullable: null
+
+    LogInUserSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: User verified please login.
+        data:
+          type: object
+          properties:
+            id:
+              type: number
+              example: 12
+            name:
+              type: string
+              example: dhiraj
+            email:
+              type: string
+              example: dhiraj@gmail.com
+            status:
+              type: number
+              example: 1
+            createdAt:
+              type: string
+              format: date-time
+              example: 2025-04-28T09:14:26.970Z
+            updatedAt:
+              type: string
+              format: date-time
+              example: 2025-04-28T09:14:26.971Z
+        meta:
+          type: object
+          properties:
+            token:
+              type: string
+              example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+    OtpInvalidErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: OTP is Invalid
+        errorCode:
+          type: string
+          example: INVALID_OTP
+        data:
+          type: object
+          nullable: true
+
+    PasswordIncorrectErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Incorrect password
+        errorCode:
+          type: string
+          example: INCORRECT_PASSWORD
+        data:
+          type: object
+          nullable: true
+
+    WrongEmailErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Email not found
+        errorCode:
+          type: string
+          example: EMAIL_NOT_FOUND
+        data:
+          type: object
+          nullable: true
+
+    TodoResponse:
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Successful.
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Todo"
+        meta:
+          type: object
+          nullable: true
+
+    Todo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 6
+        title:
+          type: string
+          example: test 2titldd
+        description:
+          type: string
+          example: test 12descdd
+        completed:
+          type: boolean
+          example: false
+        userId:
+          type: integer
+          example: 2
+        createdAt:
+          type: string
+          format: date-time
+          example: "2025-04-28T12:15:48.621Z"
+        updatedAt:
+          type: string
+          format: date-time
+          example: "2025-04-28T12:15:48.622Z"
+
+    UnauthorizedResponse:
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: Unauthorized: No token provided
+        data:
+          type: object
+          nullable: true
+
+    CreateTodoRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          example: title
+        description:
+          type: string
+          example: description
+      required:
+        - title
+        - description
+  
+    CreateTodoSuccessRequest:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Successful.
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 6
+            title:
+              type: string
+              example: test 2titldd
+            description:
+              type: string
+              example: test 12descdd
+            completed:
+              type: boolean
+              example: false
+            userId:
+              type: integer
+              example: 2
+            createdAt:
+              type: string
+              format: date-time
+              example: "2025-04-28T12:15:48.621Z"
+            updatedAt:
+              type: string
+              format: date-time
+              example: "2025-04-28T12:15:48.622Z"
+        meta:
+          type: object
+          nullable: true
+
+    DeleteTodoSuccessRequest:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Successful.
+        data:
+          type: boolean
+          example: true
+        meta:
+          type: object
+          nullable: true
+
+    UploadFileSuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: File uploaded successfully.
+        data:
+          type: object
+          properties:
+            file:
+              type: object
+              properties:
+                fieldname:
+                  type: string
+                  example: file
+                originalname:
+                  type: string
+                  example: Async_Await_Promises_CheatSheet_FULL_Dark (1).pdf
+                encoding:
+                  type: string
+                  example: 7bit
+                mimetype:
+                  type: string
+                  example: application/pdf
+                destination:
+                  type: string
+                  example: uploads/
+                filename:
+                  type: string
+                  example: 1745816323717.pdf
+                path:
+                  type: string
+                  example: uploads\\1745816323717.pdf
+                size:
+                  type: integer
+                  example: 4977
+        meta:
+          type: object
+          nullable: true
+          example: null
+
+    UploadFileErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: File upload failed
+        meta:
+          type: object
+          nullable: true
+          example: null
+
+    WeatherResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Successful.
+        data:
+          type: object
+          properties:
+            city: 
+              type: string
+              example: rajkot
+            temperature:
+              type: string
+              example: 21.48 °C
+            condition:
+              type: string
+              example: scattered clouds
+            windSpeed:
+              type: number
+              example: 1.95
+        meta:
+          type: object
+          nullable: true
+    
+    WeatherRequest:
+      type: object
+      properties:
+        city:
+          type: string
+          example: rajkot
+      required:
+        - city
+    
+    NewsResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Successful.
+        data:
+          type: array
+          items:
+            type: object
+            properties:
+              source:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    nullable: true
+                    example: news24
+                  name:
+                    type: string
+                    example: News24
+              author:
+                type: string
+                nullable: true
+                example: Jason Felix
+              title:
+                type: string
+                example: DA's opposition to employment equity targets set for court battle, testing GNU limits
+              description:
+                type: string
+                example: The DA is arguing that employment equity targets...
+              url:
+                type: string
+                format: uri
+                example: https://www.news24.com/news24/politics/das-opposition-to-employment-equity-targets-set-for-court-battle-testing-gnu-limits-20250430
+              urlToImage:
+                type: string
+                format: uri
+                nullable: true
+                example: https://cdn.24.co.za/files/Cms/General/d/12770/629f5eec5b894d6d8f428b7fe70a7bd0.jpg
+              publishedAt:
+                type: string
+                format: date-time
+                example: 2025-04-30T04:45:44
+              content:
+                type: string
+                example: The DA is arguing that employment equity targets... [+97 chars]
+        meta:
+          type: object
+          nullable: true

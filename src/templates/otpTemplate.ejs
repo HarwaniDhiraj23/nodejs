@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OTP Verification</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #f2f3f8;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      .wrapper {
+        width: 100%;
+        table-layout: fixed;
+        background-color: #f2f3f8;
+        padding: 40px 0;
+      }
+
+      .main {
+        max-width: 600px;
+        margin: auto;
+        background: #ffffff;
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      }
+
+      .header {
+        background: linear-gradient(to right, #4a00e0, #8e2de2);
+        color: #ffffff;
+        padding: 30px 20px;
+        text-align: center;
+      }
+
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+
+      .content {
+        padding: 30px 20px;
+        color: #333333;
+      }
+
+      .otp-box {
+        display: inline-block;
+        background: #f3f4f6;
+        padding: 15px 30px;
+        border-radius: 8px;
+        font-size: 28px;
+        font-weight: bold;
+        letter-spacing: 6px;
+        color: #4a00e0;
+        margin: 20px 0;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 20px;
+        font-size: 13px;
+        color: #999999;
+      }
+
+      @media screen and (max-width: 600px) {
+        .otp-box {
+          font-size: 22px;
+          padding: 12px 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="main">
+        <div class="header">
+          <h1><%= header %></h1>
+        </div>
+        <div class="content">
+          <p>Hi <strong><%= name %></strong>,</p>
+          <p><%= title %></p>
+
+          <div class="otp-box"><%= otp %></div>
+
+          <p><%= text %> <strong><%= expiresIn %></strong> <%= timeUnit %>.</p>
+          <p>
+            If you didn’t request this, please ignore this email or contact our
+            support team.
+          </p>
+          <p>Thanks,<br />The <strong>TODO</strong> Team</p>
+        </div>
+        <div class="footer">
+          &copy; <%= new Date().getFullYear() %> YourApp. All rights reserved.
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

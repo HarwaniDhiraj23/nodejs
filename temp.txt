@@ -1,0 +1,43 @@
+import { dbClient } from '../config';
+
+export const up = async () => {
+  const result = await dbClient.query(`
+    SELECT EXISTS (
+      SELECT FROM information_schema.tables 
+      WHERE table_schema = 'public' 
+      AND table_name = 'users'
+    );
+  `);
+
+  const tableExists = result.rows[0].exists;
+
+  if (!tableExists) {
+    await dbClient.query(`
+      CREATE TABLE users (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR(100),
+        email VARCHAR(100) UNIQUE,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('✅ Created users table');
+  } else {
+    const colCheck = await dbClient.query(`
+      SELECT column_name FROM information_schema.columns
+      WHERE table_name='users' AND column_name='email';
+    `);
+
+    if (colCheck.rowCount === 0) {
+      await dbClient.query(`
+        ALTER TABLE users ADD COLUMN email VARCHAR(100) UNIQUE;
+      `);
+      console.log('✅ Added missing column "email"');
+    } else {
+      console.log('✅ No migration needed, users table is up to date');
+    }
+  }
+};
+
+export const down = async () => {
+  await dbClient.query(`DROP TABLE IF EXISTS users;`);
+};

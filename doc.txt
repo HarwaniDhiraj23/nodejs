@@ -1,0 +1,27 @@
+for generating SSL certificate for local system (Browsers will show "Not Secure" warnings since it's not signed by a trusted CA.)
+=> create cert.pem and key.pem files at root dir.
+=> Open git bash
+=> openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+
+
+env file
+NODE_ENV=development
+JWT_SECRET = Testjdadf@13kcv&*fdfajfdf+
+
+# Development
+DEV_PORT=3001
+DEV_DB_URL=postgres://postgres:superpostgres@localhost:5432/learnNodeJS
+
+# Staging
+STAGE_PORT=3002
+STAGE_DB_URL=postgres://postgres:superpostgres@localhost:5432/learnNodeJS
+
+# Production
+PROD_PORT=3000
+PROD_DB_URL=postgres://postgres:superpostgres@localhost:5432/learnNodeJS
+
+EMAIL = dhirajharwanioffice@gmail.com
+PASSWORD = rsqz rgyk fosl wbhj
+
+OPENWEATHER_API_KEY=a2398257b183fd3bf57c076cf3b04f26
+NEWS_API_KEY=5a873dc7c3f048448b0538cfc63365a4
