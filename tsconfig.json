@@ -20,7 +20,11 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/legal" // Path to your custom types directory
+    ]
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]
