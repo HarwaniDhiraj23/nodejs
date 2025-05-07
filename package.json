@@ -64,7 +64,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node src/server.ts",
     "stage": "cross-env NODE_ENV=staging ts-node src/server.ts",
-    "start": "NODE_ENV=production node dist/server.js",
+    "start": "NODE_ENV=production node src/server.ts",
     "build": "tsc",
     "migrate": "ts-node src/scripts/runMigrations.ts",
     "seed": "ts-node src/scripts/runSeeders.ts",
