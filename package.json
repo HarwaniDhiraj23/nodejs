@@ -102,7 +102,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node src/server.ts",
     "stage": "cross-env NODE_ENV=staging ts-node src/server.ts",
-    "prod": "NODE_ENV=production ts-node src/server.ts",
+    "prod": "NODE_ENV=production src/server.ts",
     "migrate": "ts-node src/scripts/runMigrations.ts",
     "seed": "ts-node src/scripts/runSeeders.ts",
     "test": "jest"
