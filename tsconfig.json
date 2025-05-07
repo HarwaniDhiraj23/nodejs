@@ -15,6 +15,8 @@
     "target": "ES2020",
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "outDir": "dist",
+    "rootDir": "src"
   }
 }
