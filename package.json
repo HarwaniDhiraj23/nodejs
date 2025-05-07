@@ -1,5 +1,5 @@
 {
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "@types/supertest": "^6.0.3",
     "axios": "^1.9.0",
@@ -65,7 +65,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development ts-node src/server.ts",
     "stage": "cross-env NODE_ENV=staging ts-node src/server.ts",
-    "start": "NODE_ENV=staging node dist/server.js",
+    "start": "node dist/server.js",
     "build": "tsc",
     "migrate": "ts-node src/scripts/runMigrations.ts",
     "seed": "ts-node src/scripts/runSeeders.ts",
