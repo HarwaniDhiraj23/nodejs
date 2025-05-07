@@ -24,7 +24,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
         (req as any).user = decoded;
 
         next();
-    } catch (error) {
+    } catch (error: unknown) {
         if (error instanceof jwt.JsonWebTokenError) {
             if (error.message === 'jwt expired') {
                 errorResponse(res, 401, 'Unauthorized: Token has expired', undefined, error)
